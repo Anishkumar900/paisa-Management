@@ -8,4 +8,6 @@ public interface AuthService {
     void sendOTP(User user);
     boolean verifyEmail(User user);
     JWTResponse login(User user);
+    void forgetPassword(User user);
+    User jwtVerify(JWTResponse jwtResponse);
 }

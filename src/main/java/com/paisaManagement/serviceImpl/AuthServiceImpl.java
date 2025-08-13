@@ -2,7 +2,9 @@ package com.paisaManagement.serviceImpl;
 
 import com.paisaManagement.configuration.JWTService;
 import com.paisaManagement.enumClass.ROLE;
+import com.paisaManagement.exception.InvalidTokenException;
 import com.paisaManagement.exception.UserAlreadyExistException;
+import com.paisaManagement.exception.UserNotFoundException;
 import com.paisaManagement.mailSender.OTPRegisterSend;
 import com.paisaManagement.model.User;
 import com.paisaManagement.repository.UserRepository;
@@ -13,7 +15,6 @@ import com.paisaManagement.util.UpdateNameEmail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -110,4 +111,52 @@ public class AuthServiceImpl implements AuthService {
 
         return jwtResponse;
     }
+
+    @Override
+    public void forgetPassword(User user) {
+        User existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        if (!existingUser.isVerified()) {
+            throw new RuntimeException("User doesn't exist!");
+        }
+
+        if (!Objects.equals(user.getOtp(), "")) {
+            if (Objects.equals(user.getOtp(), existingUser.getOtp()) &&
+                    LocalDateTime.now().isBefore(existingUser.getOtpValidityTime())) {
+                existingUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                userRepository.save(existingUser);
+                return;
+            }
+            throw new RuntimeException("OTP didn't match or expired");
+        }
+
+        String otp = OtpGenerate.generateOTP(4);
+        existingUser.setOtp(otp);
+        existingUser.setOtpValidityTime(LocalDateTime.now().plusMinutes(20));
+
+        String subject = "Verify your Wealth Care account";
+        String heading = "Welcome to Wealth Care! Verify your Email";
+        otpRegisterSend.sendEmail(user.getEmail(), subject, heading, otp);
+
+        userRepository.save(existingUser);
+    }
+
+    @Override
+    public User jwtVerify(JWTResponse jwtResponse) {
+        String email= jwtService.extractUsername(jwtResponse.getToken());
+        boolean result = jwtService.isTokenExpired(jwtResponse.getToken());
+        if (email == null || result) {
+            throw new InvalidTokenException("Invalid token");
+        }
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user;
+    }
+
 }

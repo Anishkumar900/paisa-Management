@@ -24,14 +24,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> signIn(@RequestPart("user") User user,
                                     @RequestPart(value = "profileImage",required = false)MultipartFile profileImage){
-//            System.out.println("test");
         try{
-//            System.out.println(user);
             if (profileImage != null && !profileImage.isEmpty()) {
                 String profileUrl = cloudinaryService.uploadFile(profileImage);
                 user.setProfileImage(profileUrl);
             }
-//            System.out.println(user);
             User saveUser = authService.register(user);
 
             return new ResponseEntity<>(saveUser,HttpStatus.OK);
@@ -72,6 +69,26 @@ public class AuthController {
             JWTResponse result =authService.login(user);
             return new ResponseEntity<>(result,HttpStatus.OK);
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/forget-password")
+    public ResponseEntity<?> forgetPassword(@RequestBody User user) {
+        try {
+            authService.forgetPassword(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/jwt-verify")
+    public ResponseEntity<?> jwtVerify(@RequestBody JWTResponse jwtResponse){
+        try{
+            User user=authService.jwtVerify(jwtResponse);
+            return new ResponseEntity<>(user,HttpStatus.OK);
+        } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }

@@ -22,6 +22,28 @@ public class GlobalException {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTokenException(InvalidTokenException ex) {
+        ExceptionResponse response = new ExceptionResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Invalid token",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        ExceptionResponse response = new ExceptionResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "User not found.",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     // Handle wrapped RuntimeExceptions and check if cause is UserAlreadyExistException
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleRuntimeException(RuntimeException ex) {
