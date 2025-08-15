@@ -48,11 +48,15 @@ public class AuthServiceImpl implements AuthService {
         user.setOtpValidityTime(LocalDateTime.now().plusMinutes(20));
         user.setCreatedTime(LocalDateTime.now());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // Save to DB first (thread-safe)
+        User savedUser = userRepository.save(user);
+
+        // Send email asynchronously
         String subject = "Verify your Wealth Care account";
         String heading = "Welcome to Wealth Care! Verify your Email";
         otpRegisterSend.sendEmail(user.getEmail(), subject, heading, otp);
-        userRepository.save(user);
-        return user;
+
+        return savedUser;
     }
 
     @Override
@@ -64,10 +68,11 @@ public class AuthServiceImpl implements AuthService {
         String otp = OtpGenerate.generateOTP(4);
         existingUser.setOtp(otp);
         existingUser.setOtpValidityTime(LocalDateTime.now().plusMinutes(20));
+        userRepository.save(existingUser);
         String subject = "Verify your Wealth Care account";
         String heading = "Welcome to Wealth Care! Verify your Email";
         otpRegisterSend.sendEmail(user.getEmail(), subject, heading, otp);
-        userRepository.save(existingUser);
+
 
     }
 
@@ -136,12 +141,10 @@ public class AuthServiceImpl implements AuthService {
         String otp = OtpGenerate.generateOTP(4);
         existingUser.setOtp(otp);
         existingUser.setOtpValidityTime(LocalDateTime.now().plusMinutes(20));
-
+        userRepository.save(existingUser);
         String subject = "Verify your Wealth Care account";
         String heading = "Welcome to Wealth Care! Verify your Email";
         otpRegisterSend.sendEmail(user.getEmail(), subject, heading, otp);
-
-        userRepository.save(existingUser);
     }
 
     @Override
@@ -151,7 +154,6 @@ public class AuthServiceImpl implements AuthService {
         if (email == null || result) {
             throw new InvalidTokenException("Invalid token");
         }
-
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User not found");
