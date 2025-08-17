@@ -2,6 +2,7 @@ package com.paisaManagement.service;
 
 import com.paisaManagement.model.User;
 import com.paisaManagement.response.JWTResponse;
+import com.paisaManagement.response.UserDTO;
 
 public interface AuthService {
     User register(User user);
@@ -9,5 +10,5 @@ public interface AuthService {
     boolean verifyEmail(User user);
     JWTResponse login(User user);
     void forgetPassword(User user);
-    User jwtVerify(JWTResponse jwtResponse);
+    UserDTO jwtVerify(JWTResponse jwtResponse);
 }

@@ -3,15 +3,13 @@ package com.paisaManagement.controller;
 import com.paisaManagement.cloudinary.CloudinaryService;
 import com.paisaManagement.model.User;
 import com.paisaManagement.response.JWTResponse;
+import com.paisaManagement.response.UserDTO;
 import com.paisaManagement.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/v1")
@@ -86,7 +84,7 @@ public class AuthController {
     @PostMapping("/jwt-verify")
     public ResponseEntity<?> jwtVerify(@RequestBody JWTResponse jwtResponse){
         try{
-            User user=authService.jwtVerify(jwtResponse);
+            UserDTO user=authService.jwtVerify(jwtResponse);
             return new ResponseEntity<>(user,HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);

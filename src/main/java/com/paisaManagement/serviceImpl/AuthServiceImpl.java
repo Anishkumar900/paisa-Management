@@ -9,6 +9,7 @@ import com.paisaManagement.mailSender.OTPRegisterSend;
 import com.paisaManagement.model.User;
 import com.paisaManagement.repository.UserRepository;
 import com.paisaManagement.response.JWTResponse;
+import com.paisaManagement.response.UserDTO;
 import com.paisaManagement.service.AuthService;
 import com.paisaManagement.util.OtpGenerate;
 import com.paisaManagement.util.UpdateNameEmail;
@@ -148,7 +149,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User jwtVerify(JWTResponse jwtResponse) {
+    public UserDTO jwtVerify(JWTResponse jwtResponse) {
         String email= jwtService.extractUsername(jwtResponse.getToken());
         boolean result = jwtService.isTokenExpired(jwtResponse.getToken());
         if (email == null || result) {
@@ -158,7 +159,16 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new UserNotFoundException("User not found");
         }
-        return user;
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole());
+        dto.setProfileImage(user.getProfileImage());
+        dto.setDeathOfBirth(user.getDeathOfBirth());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setVerified(user.isVerified());
+        return dto;
     }
 
 }

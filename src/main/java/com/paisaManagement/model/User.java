@@ -1,16 +1,18 @@
 package com.paisaManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.paisaManagement.enumClass.ROLE;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -19,6 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
+    @Column(unique = true, nullable = false)
     private String email;
     @Enumerated(EnumType.STRING)
     private ROLE role;
@@ -34,4 +37,8 @@ public class User {
     private LocalDateTime otpValidityTime;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime createdTime;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Expenses> expenses = new ArrayList<>();
+
 }
