@@ -9,4 +9,5 @@ public interface ExpenseService {
     void expenseAdd(ExpenseRequest expenseRequest);
     List<Expenses> getExpenses(String jwt);
     void expensesEdit(ExpenseRequest expenseRequest);
+    void expensesDelete(ExpenseRequest expenseRequest);
 }

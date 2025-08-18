@@ -49,4 +49,16 @@ public class ExpenseController {
             throw new RuntimeException(e);
         }
     }
+
+    @DeleteMapping("/delete-expenses")
+    public ResponseEntity<?> expensesDelete(@RequestHeader("Authorization") String token,
+                                            @RequestBody ExpenseRequest expenses){
+
+        try{
+            expenseService.expensesDelete(expenses);
+            return new ResponseEntity<>("Successful",HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
