@@ -65,4 +65,26 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
         return new ArrayList<>(user.getExpenses());
     }
+
+    @Override
+    public void expensesEdit(ExpenseRequest expenseRequest) {
+        try{
+            Expenses expenses = expenseRepository.findById(expenseRequest.getId())
+                    .orElseThrow(() -> new RuntimeException("Expense not found with id: " + expenseRequest.getId()));
+            expenses.setAmount(Integer.parseInt(expenseRequest.getAmount()));
+            expenses.setBank(expenseRequest.getBank());
+            expenses.setExpediterType(expenseRequest.getExpediterType());
+            expenses.setExpenseDate(expenseRequest.getExpenseDate());
+            expenses.setReason(UpdateNameEmail.updateName(expenseRequest.getReason()));
+            expenses.setRequirement(expenseRequest.getRequirement());
+            expenses.setSavedAmount(Integer.parseInt(expenseRequest.getSavedAmount()));
+            expenses.setReturnName(UpdateNameEmail.updateName(expenseRequest.getReturnName()));
+            expenses.setReturnDate(expenseRequest.getReturnDate());
+            expenses.setReturnStatus(expenseRequest.getReturnStatus());
+            expenseRepository.save(expenses);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

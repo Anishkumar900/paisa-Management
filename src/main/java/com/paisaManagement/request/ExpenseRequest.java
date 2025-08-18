@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExpenseRequest {
+
+    private Long id;
     private String email;
     private String expenseDate;
     private String reason;

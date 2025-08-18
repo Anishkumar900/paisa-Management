@@ -48,7 +48,7 @@ public class AppConfig {
         CorsConfiguration cors=new CorsConfiguration();
         cors.setAllowedOriginPatterns(List.of("*"));
         cors.setAllowedHeaders(List.of("*"));
-        cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS","PATCH"));
         cors.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();

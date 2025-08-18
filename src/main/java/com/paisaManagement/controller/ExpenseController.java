@@ -2,7 +2,6 @@ package com.paisaManagement.controller;
 
 import com.paisaManagement.model.Expenses;
 import com.paisaManagement.request.ExpenseRequest;
-import com.paisaManagement.response.UserDTO;
 import com.paisaManagement.service.ExpenseService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +34,17 @@ public class ExpenseController {
             String jwt = token.substring(7);
             List<Expenses> expenseRequests=expenseService.getExpenses(jwt);
             return new ResponseEntity<>(expenseRequests,HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PatchMapping("/edit-expenses")
+    public ResponseEntity<?> expensesEdit(@RequestHeader("Authorization") String token,
+                                          @RequestBody ExpenseRequest expenses){
+        try{
+            expenseService.expensesEdit(expenses);
+            return new ResponseEntity<>("successful", HttpStatus.OK);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
