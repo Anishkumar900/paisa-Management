@@ -41,4 +41,8 @@ public class User {
     @JsonManagedReference
     private List<Expenses> expenses = new ArrayList<>();
 
+    @OneToMany(mappedBy ="user" , cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
+    private List<Bank> bank=new ArrayList<>();
+
 }
