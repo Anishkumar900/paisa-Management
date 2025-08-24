@@ -1,6 +1,7 @@
 package com.paisaManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,5 +39,10 @@ public class Bank {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+    @OneToMany(mappedBy ="bank" , cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
+    private List<BankExpenses> bankExpenses=new ArrayList<>();
+
 
 }
