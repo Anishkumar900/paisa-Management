@@ -23,4 +23,20 @@ public class UpdateNameEmail {
         if (email == null) return null;
         return email.toLowerCase();
     }
+
+    public static String allLetterInUpperCase(String str){
+        if(str==null) return null;
+
+        StringBuilder result=new StringBuilder();
+        for(char ch:str.toCharArray()){
+            if(Character.isLetter(ch)){
+                result.append(Character.toUpperCase(ch));
+            }
+            else{
+                result.append(ch);
+            }
+        }
+        return result.toString();
+
+    }
 }

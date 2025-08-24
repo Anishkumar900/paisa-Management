@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bank {
 
     @Id
@@ -20,7 +22,9 @@ public class Bank {
     private String accountHolderName;
     private String bankName;
     private String accountNumber;
-    private float amount;
+    @Column(precision = 19, scale = 2, nullable = false)
+    private BigDecimal amount = BigDecimal.ZERO;
+//    private float amount;
     private boolean phonePay;
     private boolean googlePay;
     private boolean paytm;

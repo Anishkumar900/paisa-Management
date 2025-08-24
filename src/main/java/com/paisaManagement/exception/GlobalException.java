@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.lang.InstantiationException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -31,6 +32,38 @@ public class GlobalException {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(BankAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handlerBankAlreadyExistsException(BankAlreadyExistsException ex){
+        ExceptionResponse response=new ExceptionResponse(
+                HttpStatus.CONFLICT.value(),
+                "Bank already exist",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response,HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InsignificantFundException.class)
+    public ResponseEntity<ExceptionResponse> handlerInsignificantFundException(InsignificantFundException ex){
+        ExceptionResponse response=new ExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Insignificant Amount",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(InstantiationException.class)
+    public ResponseEntity<ExceptionResponse> handlerInstantiationException(InstantiationException ex){
+        ExceptionResponse response=new ExceptionResponse(
+                HttpStatus.ALREADY_REPORTED.value(),
+                "Bank already exist",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response,HttpStatus.ALREADY_REPORTED);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
