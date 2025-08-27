@@ -39,7 +39,7 @@ public class User {
     private LocalDateTime createdTime;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Expenses> expenses = new ArrayList<>();
+    private List<LendBorrow> lendBorrows = new ArrayList<>();
 
     @OneToMany(mappedBy ="user" , cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference
