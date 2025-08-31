@@ -23,15 +23,15 @@ public class ProfileUpdateController {
             @RequestPart("updateProfile") UpdateProfile updateProfile,
             @RequestPart(value = "newProfileImage", required = false) MultipartFile newProfileImage) {
         try {
-            System.out.println("test");
+//            System.out.println("test");
             System.out.println(newProfileImage);
             if (newProfileImage != null && !newProfileImage.isEmpty()) {
-                System.out.println("test1");
+//                System.out.println("test1");
                 String profileUrl = cloudinaryService.uploadFile(newProfileImage);
-                System.out.println(profileUrl);
+//                System.out.println(profileUrl);
                 updateProfile.setProfileImage(profileUrl);
             }
-            System.out.println("tes2");
+//            System.out.println("tes2");
             updateProfileService.updateProfile(updateProfile);
             return ResponseEntity.ok("Profile updated successfully!");
         } catch (Exception e) {
